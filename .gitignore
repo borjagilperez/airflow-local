@@ -133,14 +133,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-# === Scala ===
-
-*.class
-*.log
-
-# Builder
-target/
-
-# IntelliJ project settings
-.idea

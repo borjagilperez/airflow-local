@@ -29,6 +29,7 @@ select opt in "${options[@]}"; do
             branch=$(git branch | grep '*' | awk -F' ' 'NR==1{print $2}')
             
             python3 ./scripts/airflow/replace_airflow_cfg.py airflow-local \
+                $(vault kv get -format=json kv/$owner/$branch/airflow/local/dags-folder | jq -r .data.data.value) \
                 $(vault kv get -format=json kv/$owner/$branch/airflow/local/smtp | jq -r .data.data.host) \
                 $(vault kv get -format=json kv/$owner/$branch/airflow/local/smtp | jq -r .data.data.mail_from) \
                 $(vault kv get -format=json kv/$owner/$branch/airflow/local/smtp | jq -r .data.data.password) \
