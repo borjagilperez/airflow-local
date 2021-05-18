@@ -12,6 +12,7 @@ def __parse_args():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='subparser')
     list_parser = subparsers.add_parser("airflow-local", parents=[parent_parser], help="airflow-local configuration")
+    list_parser.add_argument("dags_folder", metavar="dags-folder", help="DAGs folder")
     list_parser.add_argument("smtp_host", metavar="smtp-host", help="SMTP host")
     list_parser.add_argument("smtp_mail_from", metavar="smtp-mail-from", help="SMTP mail from")
     list_parser.add_argument("smtp_password", metavar="smtp-password", help="SMTP password")
@@ -44,7 +45,7 @@ def __main(args):
     # DAGs folder
     cfg = cfg.replace(
         f"dags_folder = {os.path.join(home, 'airflow/dags')}",
-        f"dags_folder = {os.path.join(home, 'Git/airflow-dags/dags/local')}"
+        f"dags_folder = {os.path.join(home, args.dags_folder)}"
     )
     # Postgresql
     cfg = cfg.replace(
