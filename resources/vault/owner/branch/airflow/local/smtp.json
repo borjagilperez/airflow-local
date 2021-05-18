@@ -1,0 +1,9 @@
+{
+    "host": "smtp.gmail.com",
+    "mail_from": "<example@gmail.es>",
+    "password": "<create-gmail_app_password_smtp-at-https://security.google.com/settings/security/apppasswords>",
+    "port": "587",
+    "ssl": "False",
+    "starttls": "True",
+    "user": "<example@gmail.es>"
+}
