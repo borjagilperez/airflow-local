@@ -6,7 +6,7 @@ GIT = git
 AIRFLOW = airflow
 .PHONY: info $(GIT) $(AIRFLOW)
 
-# $ make
+# $ make info
 info:
 	@echo "GIT: $(GIT)"
 	@echo "AIRFLOW: $(AIRFLOW)"
