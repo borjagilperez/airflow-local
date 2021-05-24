@@ -25,22 +25,22 @@ select opt in "${options[@]}"; do
 
             export VAULT_ADDR='http://127.0.0.1:8200'
             vault login
-            read -p 'Owner: ' owner
+            read -p 'Owner: ' vault_owner
             branch=$(git branch | grep '*' | awk -F' ' 'NR==1{print $2}')
             
             python3 ./scripts/airflow/replace_airflow_cfg.py airflow-local \
-                $(vault kv get -format=json kv/$owner/$branch/airflow/local/dags-folder | jq -r .data.data.value) \
-                $(vault kv get -format=json kv/$owner/$branch/airflow/local/smtp | jq -r .data.data.host) \
-                $(vault kv get -format=json kv/$owner/$branch/airflow/local/smtp | jq -r .data.data.mail_from) \
-                $(vault kv get -format=json kv/$owner/$branch/airflow/local/smtp | jq -r .data.data.password) \
-                $(vault kv get -format=json kv/$owner/$branch/airflow/local/smtp | jq -r .data.data.port) \
-                $(vault kv get -format=json kv/$owner/$branch/airflow/local/smtp | jq -r .data.data.ssl) \
-                $(vault kv get -format=json kv/$owner/$branch/airflow/local/smtp | jq -r .data.data.starttls) \
-                $(vault kv get -format=json kv/$owner/$branch/airflow/local/smtp | jq -r .data.data.user)
+                $(vault kv get -format=json kv/$vault_owner/$branch/airflow/local/dags-repository | jq -r .data.data.value) \
+                $(vault kv get -format=json kv/$vault_owner/$branch/airflow/local/smtp | jq -r .data.data.host) \
+                $(vault kv get -format=json kv/$vault_owner/$branch/airflow/local/smtp | jq -r .data.data.mail_from) \
+                $(vault kv get -format=json kv/$vault_owner/$branch/airflow/local/smtp | jq -r .data.data.password) \
+                $(vault kv get -format=json kv/$vault_owner/$branch/airflow/local/smtp | jq -r .data.data.port) \
+                $(vault kv get -format=json kv/$vault_owner/$branch/airflow/local/smtp | jq -r .data.data.ssl) \
+                $(vault kv get -format=json kv/$vault_owner/$branch/airflow/local/smtp | jq -r .data.data.starttls) \
+                $(vault kv get -format=json kv/$vault_owner/$branch/airflow/local/smtp | jq -r .data.data.user)
 
             airflow db reset -y
             
-            files="$(vault kv get -format=json kv/$owner/$branch/airflow/local/variables-folder | jq -r .data.data.value)/*"
+            files="$(vault kv get -format=json kv/$vault_owner/$branch/airflow/local/dags-repository | jq -r .data.data.value)/variables/local/*"
             for file in $files; do
                 echo "$file $(airflow variables import $file)"
             done
@@ -89,10 +89,10 @@ select opt in "${options[@]}"; do
 
             export VAULT_ADDR='http://127.0.0.1:8200'
             vault login
-            read -p 'Owner: ' owner
+            read -p 'Owner: ' vault_owner
             branch=$(git branch | grep '*' | awk -F' ' 'NR==1{print $2}')
             
-            files="$(vault kv get -format=json kv/$owner/$branch/airflow/local/variables-folder | jq -r .data.data.value)/*"
+            files="$(vault kv get -format=json kv/$vault_owner/$branch/airflow/local/dags-repository | jq -r .data.data.value)/variables/local/*"
             for file in $files; do
                 echo "$file $(airflow variables import $file)"
             done
