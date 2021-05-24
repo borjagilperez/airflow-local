@@ -95,8 +95,8 @@ select opt in "${options[@]}"; do
             files="$(vault kv get -format=json kv/$owner/$branch/airflow/local/variables-folder | jq -r .data.data.value)/*"
             for file in $files; do
                 echo "$file $(airflow variables import $file)"
-
             done
+            
             break
             ;;
 
