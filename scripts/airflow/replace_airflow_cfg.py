@@ -45,7 +45,7 @@ def __main(args):
     # DAGs folder
     cfg = cfg.replace(
         f"dags_folder = {os.path.join(home, 'airflow/dags')}",
-        f"dags_folder = {os.path.join(home, args.dags_folder)}"
+        f"dags_folder = {args.dags_folder}"
     )
     # Postgresql
     cfg = cfg.replace(

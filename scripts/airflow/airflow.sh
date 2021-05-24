@@ -39,7 +39,8 @@ select opt in "${options[@]}"; do
                 $(vault kv get -format=json kv/$owner/$branch/airflow/local/smtp | jq -r .data.data.user)
 
             airflow db reset -y
-            files=$HOME/Git/airflow-dags/variables/local/*
+            
+            files="$(vault kv get -format=json kv/$owner/$branch/airflow/local/variables-folder | jq -r .data.data.value)/*"
             for file in $files; do
                 echo "$file $(airflow variables import $file)"
             done
@@ -85,11 +86,17 @@ select opt in "${options[@]}"; do
             export AIRFLOW_HOME=$HOME/airflow
             eval "$($HOME/miniconda/bin/conda shell.bash hook)"
             conda activate airflow_env && conda info --envs
-            files=$HOME/Git/airflow-dags/variables/local/*
+
+            export VAULT_ADDR='http://127.0.0.1:8200'
+            vault login
+            read -p 'Owner: ' owner
+            branch=$(git branch | grep '*' | awk -F' ' 'NR==1{print $2}')
+            
+            files="$(vault kv get -format=json kv/$owner/$branch/airflow/local/variables-folder | jq -r .data.data.value)/*"
             for file in $files; do
                 echo "$file $(airflow variables import $file)"
-
             done
+            
             break
             ;;
 
